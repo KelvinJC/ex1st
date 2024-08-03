@@ -5,7 +5,7 @@ import { router as deviceRouter } from './routes/devicesRoutes.js'
 const app = express();
 
 app.use(express.json())
-app.use('/api/devices', deviceRouter)
+app.use('/api/v1/devices', deviceRouter)
 
 
 app.listen(5000, () => {
