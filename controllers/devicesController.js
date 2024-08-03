@@ -24,3 +24,19 @@ export const getSingleDevice = (req, res) => {
         .json({success: true, data: [device]})
     }
 }
+
+export const createDevice = (req, res) => {
+    const {name} = req.body;
+    if (!name) {
+        return res
+        .status(400)
+        .json({success: false, msg: 'Name value is required.'});
+    }
+    const allDevices = [...devices].sort((deviceA, deviceB) => (deviceA.id - deviceB.id));
+    const lastDevice = allDevices.at(-1);
+    const newDevice = {id: lastDevice.id + 1, name: name};
+    devices.push(newDevice);
+    res
+    .status(201)
+    .json({success: true, data: [newDevice]});
+}
