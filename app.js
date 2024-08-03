@@ -1,7 +1,10 @@
 import express from 'express';
+import { router as deviceRouter } from './routes/devicesRoutes.js' 
+
 const app = express();
 
 
+app.use('/api/devices', deviceRouter)
 
 
 app.listen(5000, () => {
