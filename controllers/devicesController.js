@@ -1,23 +1,24 @@
 import {devices, users } from '../db/data.js'
 
+let allDevices = devices;
 
 export const getDevices = (req, res) => {
-    const allDevices = devices.map((device) => {
+    const devices_ = allDevices.map((device) => {
         const {id, name, image} = device;
         return {id, name, image};
     })
     res
     .status(200)
-    .json({success: true, data: allDevices})
+    .json({success: true, data: devices_})
 }
 
 export const getSingleDevice = (req, res) => {
     const {id} = req.params;
-    const device = devices.find((device) => device.id === Number(id))
+    const device = allDevices.find((device) => device.id === Number(id))
     if (!device) {
         return res
         .status(404)
-        .json({success: false, msg: `Device with id ${id} not found`})
+        .json({success: false, msg: `Device not found.`})
     } else {
         return res
         .status(200)
@@ -32,10 +33,10 @@ export const createDevice = (req, res) => {
         .status(400)
         .json({success: false, msg: 'Name value is required.'});
     }
-    const allDevices = [...devices].sort((deviceA, deviceB) => (deviceA.id - deviceB.id));
+    allDevices = [...allDevices].sort((deviceA, deviceB) => (deviceA.id - deviceB.id));
     const lastDevice = allDevices.at(-1);
     const newDevice = {id: lastDevice.id + 1, name: name};
-    devices.push(newDevice);
+    allDevices.push(newDevice);
     res
     .status(201)
     .json({success: true, data: [newDevice]});
@@ -44,7 +45,7 @@ export const createDevice = (req, res) => {
 export const updateDevice = (req, res) => {
     const id = req.params.id;
     const name = req.body.name;
-    const device = devices.find((device) => device.id === Number(id))
+    const device = allDevices.find((device) => device.id === Number(id))
     if (!device) {
         return res
         .status(404)
@@ -54,5 +55,20 @@ export const updateDevice = (req, res) => {
         res
         .status(200)
         .json({success: true, data: [device]})
+    }
+}
+
+export const deleteDevice = (req, res) => {
+    const { id } = req.params;
+    const device = allDevices.find((device) => device.id === Number(id))
+    if (!device) {
+        return res
+        .status(404)
+        .json({success: false, msg: 'Device not found.'})
+    } else {
+        allDevices = allDevices.filter((device) => device.id !== Number(id))
+        res
+        .status(204) // with status(204) server returns no response, alternative is to use status(200)
+        .json({success: true, data: []})
     }
 }
