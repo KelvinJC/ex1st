@@ -40,3 +40,19 @@ export const createDevice = (req, res) => {
     .status(201)
     .json({success: true, data: [newDevice]});
 }
+
+export const updateDevice = (req, res) => {
+    const id = req.params.id;
+    const name = req.body.name;
+    const device = devices.find((device) => device.id === Number(id))
+    if (!device) {
+        return res
+        .status(404)
+        .json({success: false, msg: 'Device not found.'})
+    } else {
+        device.name = name;
+        res
+        .status(200)
+        .json({success: true, data: [device]})
+    }
+}
