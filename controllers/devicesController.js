@@ -1,5 +1,5 @@
 import {devices, users } from '../db/data.js'
-
+import { validationResult } from 'express-validator'
 let allDevices = devices;
 
 export const getDevices = (req, res) => {
@@ -27,15 +27,17 @@ export const getSingleDevice = (req, res) => {
 }
 
 export const createDevice = (req, res) => {
-    const {name} = req.body;
-    if (!name) {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
         return res
         .status(400)
-        .json({success: false, msg: 'Name value is required.'});
-    }
+        .json({success: false, errors: errors.array()});
+    } 
+    const {name, price, desc} = req.body;
+    // price = price ? `${price.toFixed(2)}` : price  // javascript's money problems
     allDevices = [...allDevices].sort((deviceA, deviceB) => (deviceA.id - deviceB.id));
     const lastDevice = allDevices.at(-1);
-    const newDevice = {id: lastDevice.id + 1, name: name};
+    const newDevice = {id: lastDevice.id + 1, name, price, desc};
     allDevices.push(newDevice);
     res
     .status(201)
