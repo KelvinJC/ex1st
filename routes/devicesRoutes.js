@@ -3,6 +3,7 @@ import {
     getDevices,
     getSingleDevice,
     createDevice,
+    updateDevice,
 } from '../controllers/devicesController.js'
 
 export const router = express.Router();
@@ -11,5 +12,5 @@ export const router = express.Router();
 router.get('/', getDevices);
 router.get('/:id', getSingleDevice);
 router.post('/', createDevice);
-// router.put('/:id', updateDevice);
+router.put('/:id', updateDevice);
 // router.delete('/:id', deleteDevice);
